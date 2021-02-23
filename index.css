@@ -1,4 +1,34 @@
+:root {
+  --gutterWidth: 25px;
+}
+
 /* Add CSS styles here! */
 body {
   font-family: sans-serif;
+}
+
+.App {
+  background: lightgrey;
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--gutterWidth);
+  padding: var(--gutterWidth);
+}
+
+.Column {
+  background: white;
+  padding-bottom: 0.5rem;
+}
+
+h2 {
+  font-weight: normal;
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+}
+
+ol {
+  list-style-type: none;
 }
