@@ -25,6 +25,24 @@ const initialData = [
 ];
 
 const reducer = (state, action) => {
+  const getColumnWithCardRemoved = (column, cardIndex) => {
+    return {
+      ...column,
+      items: column.items.filter((card, j) => j !== cardIndex),
+    };
+  };
+
+  const getColumnWithCardAdded = (column, cardIndex, text) => {
+    return {
+      ...column,
+      items: [
+        ...column.items.slice(0, cardIndex),
+        text,
+        ...column.items.slice(cardIndex),
+      ],
+    };
+  };
+
   switch (action.type) {
     case 'ADD_CARD': {
       return state.map((column, i) => {
@@ -40,32 +58,30 @@ const reducer = (state, action) => {
         const { text, columnIndex, cardIndex } = action;
 
         if (i === columnIndex) {
-          // Remove the card from the original column
-          return {
-            ...column,
-            items: column.items.filter((card, j) => j !== cardIndex),
-          };
+          return getColumnWithCardRemoved(column, cardIndex);
         }
 
         if (i === columnIndex - 1) {
-          // Add the card to the previous column
-          return {
-            ...column,
-            items: [
-              ...column.items.slice(0, cardIndex),
-              text,
-              ...column.items.slice(cardIndex),
-            ],
-          };
+          return getColumnWithCardAdded(column, cardIndex, text);
         }
 
         return column;
       });
     }
     case 'MOVE_CARD_RIGHT': {
-      // TODO
-      console.log('TODO MOVE_CARD_RIGHT');
-      break;
+      return state.map((column, i) => {
+        const { text, columnIndex, cardIndex } = action;
+
+        if (i === columnIndex) {
+          return getColumnWithCardRemoved(column, cardIndex);
+        }
+
+        if (i === columnIndex + 1) {
+          return getColumnWithCardAdded(column, cardIndex, text);
+        }
+
+        return column;
+      });
     }
     default:
       return state;
