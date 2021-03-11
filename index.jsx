@@ -37,18 +37,26 @@ const reducer = (state, action) => {
     }
     case 'MOVE_CARD_LEFT': {
       return state.map((column, i) => {
-        debugger;
+        const { text, columnIndex, cardIndex } = action;
 
-        if (i === action.columnIndex) {
+        if (i === columnIndex) {
           // Remove the card from the original column
           return {
             ...column,
-            items: column.items.filter((card, j) => j !== action.cardIndex),
+            items: column.items.filter((card, j) => j !== cardIndex),
           };
         }
 
-        if (i === action.columnIndex - 1) {
-          // TODO Add the card to the previous column
+        if (i === columnIndex - 1) {
+          // Add the card to the previous column
+          return {
+            ...column,
+            items: [
+              ...column.items.slice(0, cardIndex),
+              text,
+              ...column.items.slice(cardIndex),
+            ],
+          };
         }
 
         return column;
@@ -65,25 +73,25 @@ const reducer = (state, action) => {
 };
 
 const Card = ({ text, columnIndex, cardIndex, dispatch }) => {
-  const isFirstCard = columnIndex === 0;
-  const isLastCard = columnIndex === initialData.length - 1;
+  const isFirstColumn = columnIndex === 0;
+  const isLastColumn = columnIndex === initialData.length - 1;
 
   return (
     <li>
       <button
         onClick={() => {
-          dispatch({ type: 'MOVE_CARD_LEFT', columnIndex, cardIndex });
+          dispatch({ type: 'MOVE_CARD_LEFT', text, columnIndex, cardIndex });
         }}
-        disabled={isFirstCard}
+        disabled={isFirstColumn}
       >
         {'<'}
       </button>
       {text}
       <button
         onClick={() => {
-          dispatch({ type: 'MOVE_CARD_RIGHT', columnIndex, cardIndex });
+          dispatch({ type: 'MOVE_CARD_RIGHT', text, columnIndex, cardIndex });
         }}
-        disabled={isLastCard}
+        disabled={isLastColumn}
       >
         {'>'}
       </button>
